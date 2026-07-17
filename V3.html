@@ -188,7 +188,7 @@
     <!-- HERO BANNER -->
     <div id="hero-banner" class="hero">
         <div class="hero-content">
-            <h1 id="hero-title">Explore Cinematic Masterpieces</h1>
+            <h1 id="hero-title">JFA MOVIE DATABASED</h1>
         </div>
     </div>
 
@@ -198,17 +198,17 @@
         <!-- SECTION: CATALOG HOME -->
         <div id="home" class="section active">
             <div class="home-row-wrapper" id="row-trending-box">
-                <h2 class="section-title">Trending Now</h2>
+                <h2 class="section-title">FEATURED ON JFAmdb</h2>
                 <div class="movie-grid" id="movie-trending"></div>
             </div>
             
             <div class="home-row-wrapper" id="row-highlights-box">
-                <h2 class="section-title">JFA Student Highlights</h2>
+                <h2 class="section-title">JFA Showcase</h2>
                 <div class="movie-grid" id="movie-highlights"></div>
             </div>
 
             <div class="home-row-wrapper" id="row-classics-box">
-                <h2 class="section-title">Classics & Documentaries</h2>
+                <h2 class="section-title">Documentary</h2>
                 <div class="movie-grid" id="movie-classics"></div>
             </div>
         </div>
@@ -235,7 +235,7 @@
         <div id="maba-page" class="section">
             <div class="coming-soon-box">
                 <h2>Pekan Maba JFA</h2>
-                <p>Pusat informasi pemutaran film dokumenter profil kreatif mahasiswa baru.</p>
+                <p>pemutaran film mahasiswa baru.</p>
             </div>
             <div class="movie-grid" id="movie-maba-grid"></div>
         </div>
@@ -321,9 +321,9 @@
                         <div class="form-group"><label>Genre *</label><input type="text" id="adm-genre" placeholder="Drama / Live" required></div>
                         <div class="form-group"><label>Destinasi Section Penempatan *</label>
                             <select id="adm-homesection">
-                                <option value="trending">Trending Now (Home)</option>
-                                <option value="highlights">JFA Student Highlights (Home)</option>
-                                <option value="classics">Classics & Documentaries (Home)</option>
+                                <option value="trending">FEATURED ON JFAmdb(Home)</option>
+                                <option value="highlights">JFA Showcase (Home)</option>
+                                <option value="classics">Documentary (Home)</option>
                                 <option value="showcase">JFA SHOWCASE</option>
                                 <option value="maba">Pekan Maba</option>
                                 <option value="live">LIVE Streaming</option>
@@ -479,7 +479,7 @@
             const title = document.getElementById('hero-title');
             
             if(id === 'home') {
-                hero.style.display = 'flex'; title.innerText = "Explore Cinematic Masterpieces";
+                hero.style.display = 'flex'; title.innerText = "JFA MOVIE DATABASED";
                 renderMovies();
             } else if(id === 'jfa-showcase') {
                 hero.style.display = 'flex'; title.innerText = "JFA Showcase Program";
@@ -488,7 +488,7 @@
                 hero.style.display = 'flex'; title.innerText = "Live Penayangan & Diskusi";
                 renderMovies();
             } else if(id === 'maba-page') {
-                hero.style.display = 'flex'; title.innerText = "Pekan Orientasi Mahasiswa Baru";
+                hero.style.display = 'flex'; title.innerText = "Pekan MABA";
                 renderMovies();
             } else {
                 hero.style.display = 'none';
