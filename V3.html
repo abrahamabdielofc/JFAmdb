@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JFAmdb - Jogja Film Academy Movie Database & Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ffffff; 
+            --accent: #e50914; 
+            --success: #2ecc71;
+            --warning: #f1c40f;
+            --info: #3498db;
+            --bg-dark: #0a0a0a;
+            --bg-card: #121212;
+            --text-main: #f5f5f7;
+            --text-muted: #a1a1a6;
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- PENGAMAN ANTI-SCREENSHOT & PROTEKSI DATA --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; user-select: none; -webkit-user-select: none; }
+        @media print { body { display: none !important; } }
+
+        body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- PRELOADER --- */
+        #preloader { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: #000000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease, visibility 0.5s; }
+        .loader-bar { width: 120px; height: 2px; background: rgba(255, 255, 255, 0.1); margin-top: 25px; position: relative; overflow: hidden; }
+        .loader-progress { width: 0%; height: 100%; background: var(--accent); position: absolute; animation: load 1.5s forwards ease; }
+        @keyframes load { to { width: 100%; } }
+
+        /* --- HEADER --- */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 6%; background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent); position: fixed; width: 100%; top: 0; z-index: 900; backdrop-filter: blur(8px); }
+        .brand-text { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; cursor: pointer; }
+        .brand-text span { color: var(--accent); }
+        nav { display: flex; gap: 20px; align-items: center; }
+        nav a { color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; cursor: pointer; transition: var(--transition-smooth); }
+        nav a:hover, nav a.active { color: var(--primary); }
+        .live-badge { background: var(--accent); color: white; padding: 2px 6px; font-size: 10px; border-radius: 4px; font-weight: 800; margin-left: 5px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+        .user-greeting { font-size: 14px; font-weight: 700; color: #fff; border-left: 2px solid var(--accent); padding-left: 12px; display: none; }
+        .btn-cms { background: rgba(255, 255, 255, 0.08); padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); }
+
+        /* --- HERO BANNER --- */
+        .hero { height: 40vh; background: linear-gradient(180deg, rgba(10,10,10,0.2), var(--bg-dark) 95%), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1920') center/cover; display: flex; align-items: center; padding: 0 6%; }
+        .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 800; line-height: 1.1; }
+
+        /* --- CONTAINER & GENERAL SECTIONS --- */
+        .container { padding: 0 6% 80px; position: relative; z-index: 10; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .section-title { font-size: 24px; font-weight: 800; margin-top: 40px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 4px; height: 24px; background: var(--accent); display: inline-block; border-radius: 2px; }
+
+        .coming-soon-box { text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 40px; }
+        .coming-soon-box h2 { font-size: 32px; margin-bottom: 10px; font-weight: 800; }
+        .coming-soon-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; }
+
+        /* --- GRID MOVIE --- */
+        .home-row-wrapper { margin-bottom: 40px; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+        .movie-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; cursor: pointer; transition: var(--transition-smooth); border: 1px solid rgba(255, 255, 255, 0.03); position: relative; }
+        .movie-card:hover { transform: translateY(-8px); border-color: rgba(255, 255, 255, 0.1); }
+        .poster-wrapper { width: 100%; padding-top: 145%; position: relative; overflow: hidden; background: #222; }
+        .movie-card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Badge Coming Soon */
+        .badge-coming-soon {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background-color: var(--accent);
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 20px; 
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .movie-info { padding: 15px; }
+        .movie-info h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .movie-meta-brief { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
+
+        /* --- STATUS BADGES --- */
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .status-pending { background: rgba(241, 196, 15, 0.15); color: var(--warning); }
+        .status-approved { background: rgba(46, 204, 113, 0.15); color: var(--success); }
+        .status-declined { background: rgba(229, 9, 20, 0.15); color: var(--accent); }
+
+        /* --- AUTH & FORMS --- */
+        .card-auth { max-width: 480px; margin: 60px auto; background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 16px; }
+        .login-tabs { display: flex; background: rgba(255, 255, 255, 0.03); border-radius: 8px; padding: 4px; margin-bottom: 25px; }
+        .tab-btn { flex: 1; padding: 12px; background: transparent; border: none; color: var(--text-muted); font-weight: 700; font-size: 13px; cursor: pointer; border-radius: 6px; }
+        .tab-btn.active { background: rgba(255, 255, 255, 0.1); color: var(--primary); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: white; border-radius: 8px; font-size: 14px; }
+        .btn-action { background: var(--primary); color: var(--bg-dark); padding: 14px; width: 100%; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 10px; transition: var(--transition-smooth); }
+        .btn-action:hover { background: var(--accent); color: #fff; }
+        .btn-curate { padding: 6px 12px; border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 5px; }
+        .select-curate { padding: 6px 8px; background: #222; border: 1px solid #444; color: #fff; font-size: 12px; border-radius: 4px; margin-right: 5px; }
+        .file-hint { display: block; font-size: 11px; color: var(--warning); margin-top: 5px; font-style: italic; }
+
+        /* OAUTH BUTTONS */
+        .oauth-divider { display: flex; align-items: center; text-align: center; margin: 20px 0; color: var(--text-muted); font-size: 12px; }
+        .oauth-divider::before, .oauth-divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .oauth-divider:not(:empty)::before { margin-right: .25em; }
+        .oauth-divider:not(:empty)::after { margin-left: .25em; }
+        .btn-oauth { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.02); color: white; font-weight: 600; font-size: 13px; cursor: pointer; transition: var(--transition-smooth); }
+        .btn-oauth:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+
+        /* --- CMS LAYOUT --- */
+        .cms-layout { display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 40px; }
+        @media (max-width: 900px) { .cms-layout { grid-template-columns: 1fr; } }
+        .table-responsive { overflow-x: auto; background: var(--bg-card); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 18px; text-align: left; font-size: 13px; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        th { background: rgba(255, 255, 255, 0.02); color: var(--text-muted); }
+        .clickable-title { color: var(--primary); text-decoration: underline; cursor: pointer; transition: var(--transition-smooth); }
+        .clickable-title:hover { color: var(--accent); }
+
+        /* --- NOTIFICATION LOG PANEL --- */
+        .log-panel { background: #1a1a1a; padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; font-size: 12px; max-height: 180px; overflow-y: auto; color: #00ff00; margin-bottom: 20px; }
+
+        /* --- MODAL DETAIL PREVIEW --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; opacity: 0; transition: var(--transition-smooth); }
+        .modal.open { display: flex; opacity: 1; }
+        .modal-content { background: #111111; border-radius: 16px; max-width: 950px; width: 100%; border: 1px solid rgba(255, 255, 255, 0.08); overflow: hidden; position: relative; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 35px; cursor: pointer; color: var(--text-muted); z-index: 10; line-height: 1; }
+        .close-btn:hover { color: var(--accent); }
+        
+        .modal-body { display: grid; grid-template-columns: 1.2fr 1fr; }
+        @media (max-width: 768px) { .modal-body { grid-template-columns: 1fr; } }
+        
+        .preview-side { width: 100%; min-height: 400px; display: flex; justify-content: center; align-items: center; background: #000; position: relative; overflow: hidden; }
+        .preview-side iframe { width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0; z-index: 5; }
+        .poster-placeholder-modal { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; z-index: 2; transition: opacity 0.5s ease; }
+        
+        .cinema-flash { position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: #000; z-index: 4; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .cinema-flash.trigger { opacity: 1; }
+
+        .details-side { padding: 40px; display: flex; flex-direction: column; justify-content: center; transition: var(--transition-smooth); }
+        .details-side h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+        .meta-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .badge { background: rgba(255, 255, 255, 0.06); padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .synopsis { color: var(--text-muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+        .crew-list { font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.5; }
+        .crew-list strong { color: #fff; }
+        
+        .btn-watch { background: var(--accent); color: white; padding: 14px 28px; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; text-align: center; transition: all 0.3s ease; box-shadow: 0 0 0 rgba(229, 9, 20, 0); }
+        .btn-watch:hover { transform: scale(1.02); box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4); }
+        .btn-watch:active { transform: scale(0.95); }
+        .btn-watch.clicked-hide { display: none; }
+    </style>
+</head>
+<body>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-wrapper">
+            <h1 style="font-weight: 800; font-size: 28px; letter-spacing: 3px;">JFA<span style="color:var(--accent)">mdb</span></h1>
+            <div class="loader-bar"><div class="loader-progress"></div></div>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header id="navbar">
+        <div class="brand-text" onclick="switchSection('home')">JFA<span>mdb</span></div>
+        <nav>
+            <a onclick="switchSection('home')" id="nav-home" class="active">Home</a>
+            <a onclick="switchSection('jfa-showcase')" id="nav-showcase">JFA SHOWCASE</a>
+            <a onclick="switchSection('live-page')" id="nav-live">Live <span class="live-badge">LIVE</span></a>
+            <a onclick="switchSection('maba-page')" id="nav-maba">Pekan Maba</a>
+            <span id="header-user-greet" class="user-greeting">Hi, Guest</span>
+            <a onclick="handleAuthNavClick()" id="nav-cms" class="btn-cms">Sign In</a>
+            <a onclick="logout()" id="nav-logout" style="display: none; color: var(--accent); font-size: 13px;">Logout</a>
+        </nav>
+    </header>
+
+    <!-- HERO BANNER -->
+    <div id="hero-banner" class="hero">
+        <div class="hero-content">
+            <h1 id="hero-title">Explore Cinematic Masterpieces</h1>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        
+        <!-- SECTION: CATALOG HOME -->
+        <div id="home" class="section active">
+            <div class="home-row-wrapper" id="row-trending-box">
+                <h2 class="section-title">Trending Now</h2>
+                <div class="movie-grid" id="movie-trending"></div>
+            </div>
+            
+            <div class="home-row-wrapper" id="row-highlights-box">
+                <h2 class="section-title">JFA Student Highlights</h2>
+                <div class="movie-grid" id="movie-highlights"></div>
+            </div>
+
+            <div class="home-row-wrapper" id="row-classics-box">
+                <h2 class="section-title">Classics & Documentaries</h2>
+                <div class="movie-grid" id="movie-classics"></div>
+            </div>
+        </div>
+
+        <!-- SECTION: JFA SHOWCASE -->
+        <div id="jfa-showcase" class="section">
+            <div class="coming-soon-box">
+                <h2>JFA Showcase</h2>
+                <p>Eksplorasi kumpulan screening eksklusif film tugas akhir mahasiswa terbaik JFA.</p>
+            </div>
+            <div class="movie-grid" id="movie-showcase-grid"></div>
+        </div>
+
+        <!-- SECTION: LIVE PAGE -->
+        <div id="live-page" class="section">
+            <div class="coming-soon-box">
+                <h2>Live Streaming Hub</h2>
+                <p>Nonton bareng, kuliah umum, dan diskusi interaktif bersama sutradara secara langsung.</p>
+            </div>
+            <div class="movie-grid" id="movie-live-grid"></div>
+        </div>
+
+        <!-- SECTION: PEKAN MABA -->
+        <div id="maba-page" class="section">
+            <div class="coming-soon-box">
+                <h2>Pekan Maba JFA</h2>
+                <p>Pusat informasi pemutaran film dokumenter profil kreatif mahasiswa baru.</p>
+            </div>
+            <div class="movie-grid" id="movie-maba-grid"></div>
+        </div>
+
+        <!-- SECTION: AUTHENTICATION -->
+        <div id="cms-login" class="section">
+            <div class="card-auth">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h3 id="auth-title">Sign In to JFAmdb</h3>
+                </div>
+                <div class="login-tabs" id="auth-role-tabs">
+                    <button class="tab-btn active" id="btn-tab-user" onclick="switchRoleTab('user')">Mahasiswa/Umum</button>
+                    <button class="tab-btn" id="btn-tab-creator" onclick="switchRoleTab('creator')">Creator</button>
+                    <button class="tab-btn" id="btn-tab-admin" onclick="switchRoleTab('admin')">Admin Web</button>
+                </div>
+                <div id="auth-form-box"></div>
+                <div class="switch-auth-link" id="auth-toggle-msg" style="text-align:center; font-size:13px; margin-top:15px; color:var(--text-muted);">
+                    Belum punya akun? <span style="color:var(--accent); cursor:pointer;" onclick="toggleAuthMode('register')">Daftar Sekarang</span>
+                </div>
+                
+                <div class="oauth-divider">Atau masuk dengan</div>
+                
+                <button class="btn-oauth" onclick="oauthLogin('Google')">
+                    <img src="https://img.icons8.com/color/16/000000/google-logo.png" alt="Google"> Lanjutkan dengan Google
+                </button>
+                <button class="btn-oauth" onclick="oauthLogin('Apple')">
+                    <img src="https://img.icons8.com/ios-filled/16/ffffff/mac-os.png" alt="Apple"> Lanjutkan dengan Apple
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION: DASHBOARD CREATOR -->
+        <div id="cms-dashboard" class="section" style="padding-top: 20px;">
+            <div class="cms-layout">
+                <form id="creator-upload-form" onsubmit="event.preventDefault(); submitNewFilm();" style="background: var(--bg-card); padding: 30px; border-radius: 16px;">
+                    <h3 style="margin-bottom: 20px;">Submission Karya Film</h3>
+                    <div class="form-group"><label>Judul Film *</label><input type="text" id="new-title" required></div>
+                    <div class="form-group"><label>Sutradara (Director) *</label><input type="text" id="new-director" required></div>
+                    <div class="form-group"><label>Produser *</label><input type="text" id="new-producer" required></div>
+                    <div class="form-group"><label>Durasi Film *</label><input type="text" id="new-duration" placeholder="cth: 15 Menit" required></div>
+                    <div class="form-group"><label>Tahun Rilis *</label><input type="text" id="new-year" value="2026" required></div>
+                    <div class="form-group"><label>Kategori Utama *</label><input type="text" id="new-category" placeholder="cth: Short Film / Documentary" required></div>
+                    <div class="form-group"><label>Genre *</label><input type="text" id="new-genre" placeholder="cth: Drama / Horror" required></div>
+                    
+                    <div class="form-group">
+                        <label>Upload Gambar Poster Film *</label>
+                        <input type="file" id="new-poster" accept="image/*" required>
+                        <span class="file-hint">Keterangan: Pilih berkas gambar (.jpg, .jpeg, .png)</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload File Film *</label>
+                        <input type="file" id="new-video-file" accept=".mp4, .mov" required>
+                        <span class="file-hint">Keterangan: Hanya menerima format file MOV / MP4</span>
+                    </div>
+
+                    <div class="form-group"><label>Sinopsis Lengkap *</label><textarea id="new-synopsis" rows="3" required></textarea></div>
+                    <button type="submit" class="btn-action">Kirim Ke Admin</button>
+                </form>
+                <div>
+                    <h3 style="margin-bottom: 20px;">Daftar Film Yang Anda Submit</h3>
+                    <div class="table-responsive">
+                        <table id="creator-table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: DASHBOARD ADMIN -->
+        <div id="admin-dashboard" class="section" style="padding-top: 20px;">
+            <h2 class="section-title">Admin Control & Curations</h2>
+            
+            <div class="cms-layout" style="grid-template-columns: 1.8fr 1.2fr; margin-bottom: 40px;">
+                <form id="admin-upload-form" onsubmit="event.preventDefault(); adminAddFilmDirectly();" style="background: var(--bg-card); padding: 30px; border-radius: 16px; border:1px solid rgba(255,255,255,0.05);">
+                    <h3 style="margin-bottom: 20px; color: var(--success);">+ Tambah Konten Langsung (Admin)</h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                        <div class="form-group"><label>Judul Film / Live Event *</label><input type="text" id="adm-title" required></div>
+                        <div class="form-group"><label>Sutradara / Host *</label><input type="text" id="adm-director" required></div>
+                        <div class="form-group"><label>Produser *</label><input type="text" id="adm-producer" required></div>
+                        <div class="form-group"><label>Durasi *</label><input type="text" id="adm-duration" placeholder="cth: 20 Menit / LIVE" required></div>
+                        <div class="form-group"><label>Tahun Rilis *</label><input type="text" id="adm-year" value="2026" required></div>
+                        <div class="form-group"><label>Kategori *</label><input type="text" id="adm-category" placeholder="Short Film / Talkshow" required></div>
+                        <div class="form-group"><label>Genre *</label><input type="text" id="adm-genre" placeholder="Drama / Live" required></div>
+                        <div class="form-group"><label>Destinasi Section Penempatan *</label>
+                            <select id="adm-homesection">
+                                <option value="trending">Trending Now (Home)</option>
+                                <option value="highlights">JFA Student Highlights (Home)</option>
+                                <option value="classics">Classics & Documentaries (Home)</option>
+                                <option value="showcase">JFA SHOWCASE</option>
+                                <option value="maba">Pekan Maba</option>
+                                <option value="live">LIVE Streaming</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload Gambar Poster / Thumbnail *</label>
+                        <input type="file" id="adm-poster" accept="image/*" required>
+                        <span class="file-hint">Keterangan: Pilih berkas gambar (.jpg, .jpeg, .png)</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Upload File Film / Video Event *</label>
+                        <input type="file" id="adm-video-file" accept=".mp4, .mov" required>
+                        <span class="file-hint">Keterangan: Hanya menerima format file MOV / MP4</span>
+                    </div>
+
+                    <div class="form-group"><label>Sinopsis / Deskripsi Event *</label><textarea id="adm-synopsis" rows="2" required></textarea></div>
+                    <button type="submit" class="btn-action" style="background:var(--success); color:white;">Publish Konten Sekarang</button>
+                </form>
+
+                <div>
+                    <h3 style="margin-bottom: 15px; color:var(--info);">Spreadsheet Database (Users)</h3>
+                    <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                        <table id="spreadsheet-table"></table>
+                    </div>
+
+                    <h3 style="margin-bottom: 10px; color:var(--warning);">Sistem Log Notifikasi Email</h3>
+                    <div class="log-panel" id="email-log">
+                        [SYSTEM LOG]: Mail SMTP Server is active...
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color:#fff;">Manajemen Validasi & Lokasi Penayangan</h3>
+            <div class="table-responsive">
+                <table id="admin-table"></table>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--accent);">Zona Penghapusan Film</h3>
+            <div class="table-responsive" style="border-color: rgba(229, 9, 20, 0.2); margin-bottom: 40px;">
+                <table id="admin-delete-table"></table>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--success); display: flex; align-items: center; gap: 8px;">
+                ♻️ Recycle Bin (Karya yang Dihapus)
+            </h3>
+            <div class="table-responsive" style="border-color: rgba(46, 204, 113, 0.2);">
+                <table id="admin-recycle-table"></table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETAIL PREVIEW FILMS -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-body">
+                <div class="preview-side" id="mediaContainer">
+                    <div id="cinemaFlash" class="cinema-flash"></div>
+                    <img id="modalPoster" class="poster-placeholder-modal" src="" alt="Poster">
+                </div>
+                <div class="details-side">
+                    <h2 id="modalTitle">Judul Film</h2>
+                    <div class="meta-badges">
+                        <span class="badge" id="modalCategory">Kategori</span>
+                        <span class="badge" id="modalGenre">Genre</span>
+                        <span class="badge" id="modalYear">Tahun</span>
+                        <span class="badge" id="modalDuration">Durasi</span>
+                    </div>
+                    <p class="synopsis" id="modalSynopsis">Sinopsis.</p>
+                    <div class="crew-list">
+                        <p><strong>Sutradara:</strong> <span id="modalDirector"></span></p>
+                        <p><strong>Produser:</strong> <span id="modalProducer"></span></p>
+                    </div>
+                    <button class="btn-watch" id="modalWatchBtn">WATCH NOW</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let spreadsheetDB = [
+            { id: 1, name: "Abraham", identity: "Abraham13", password: "abrahamabraham", role: "admin", type: "Native" },
+            { id: 2, name: "Admin JFA", identity: "adminjfa", password: "JFAmdb", role: "admin", type: "Native" },
+            { id: 3, name: "Creator JFA", identity: "creator@jfa.com", password: "password123", role: "creator", type: "Native" },
+            { id: 4, name: "Budi Santoso", identity: "budi@student.jfa.ac.id", password: "password123", role: "user", type: "Google" }
+        ];
+
+        // Menyertakan Film Jalan Persemaian dengan Poster Berorientasi Portrait dan Menghapus Status Coming Soon
+        let movies = [
+            { 
+                id: 1, 
+                title: "Jalan Persemaian", 
+                director: "Abraham Abdiel Arya Putra Yudianto", 
+                producer: "-", 
+                duration: "15 Minutes", 
+                year: "2026", 
+                category: "Terbaru", 
+                genre: "Dokumenter", 
+                synopsis: "As a director, artist Garin Nugroho consistently reflects on Indonesian culture through his films, exploring diverse perspectives—ranging from artists to the general public—regarding a culture that is gradually eroding and losing its appeal among the current generation, a trend that threatens the very loss of cultural identity.", 
+                poster: "banner input-1 copy_2.jpg", // Menggunakan poster portrait resmi yang telah disediakan
+                trailer: "https://www.youtube-nocookie.com/embed/WvzGwZrbHVs?si=9KAuEsHGW9dhGsA2", // Menggunakan tautan YouTube tersemat
+                status: "approved", 
+                homeSection: "trending", 
+                owner: "system",
+                comingSoon: false, // Menghapus pemicu Coming Soon
+                rating: "SU"
+            }
+        ];
+
+        let deletedMovies = [];
+        let activeRole = 'user'; 
+        let authMode = 'login';  
+        let loggedInUser = null; 
+        let currentActiveMovieVideoUrl = ""; 
+
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.getElementById('preloader').style.opacity = '0'; document.getElementById('preloader').style.visibility = 'hidden'; }, 600);
+            renderAuthForm();
+            renderMovies();
+            activateSecurity();
+            renderSpreadsheet();
+        });
+
+        function activateSecurity() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('keydown', e => {
+                if (e.key === 'PrintScreen') {
+                    alert('Screenshot terproteksi oleh sistem enkripsi JFAmdb!');
+                    navigator.clipboard.writeText(''); 
+                    e.preventDefault();
+                }
+                if (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'u' || e.key === 'shift' || e.key === 'i')) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function switchSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
+
+            const navMap = { 'home': 'nav-home', 'jfa-showcase': 'nav-showcase', 'live-page': 'nav-live', 'maba-page': 'nav-maba' };
+            if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
+
+            const hero = document.getElementById('hero-banner');
+            const title = document.getElementById('hero-title');
+            
+            if(id === 'home') {
+                hero.style.display = 'flex'; title.innerText = "Explore Cinematic Masterpieces";
+                renderMovies();
+            } else if(id === 'jfa-showcase') {
+                hero.style.display = 'flex'; title.innerText = "JFA Showcase Program";
+                renderMovies();
+            } else if(id === 'live-page') {
+                hero.style.display = 'flex'; title.innerText = "Live Penayangan & Diskusi";
+                renderMovies();
+            } else if(id === 'maba-page') {
+                hero.style.display = 'flex'; title.innerText = "Pekan Orientasi Mahasiswa Baru";
+                renderMovies();
+            } else {
+                hero.style.display = 'none';
+            }
+        }
+
+        function handleAuthNavClick() {
+            if (loggedInUser) {
+                if (loggedInUser.role === 'creator') switchSection('cms-dashboard');
+                else if (loggedInUser.role === 'admin') switchSection('admin-dashboard');
+                else switchSection('home');
+            } else {
+                switchSection('cms-login');
+            }
+        }
+
+        function switchRoleTab(role) {
+            activeRole = role;
+            document.getElementById('btn-tab-user').classList.toggle('active', role === 'user');
+            document.getElementById('btn-tab-creator').classList.toggle('active', role === 'creator');
+            document.getElementById('btn-tab-admin').classList.toggle('active', role === 'admin');
+            document.getElementById('auth-toggle-msg').style.display = role === 'admin' ? 'none' : 'block';
+            renderAuthForm();
+        }
+
+        function toggleAuthMode(mode) {
+            authMode = mode;
+            document.getElementById('auth-title').innerText = mode === 'login' ? 'Sign In to JFAmdb' : 'Create JFAmdb Account';
+            renderAuthForm();
+        }
+
+        function renderAuthForm() {
+            const formBox = document.getElementById('auth-form-box');
+            let identityLabel = activeRole === 'admin' ? 'Username Admin *' : (activeRole === 'user' ? 'NIM / Email Umum *' : 'Email Creator *');
+            let hintValue = activeRole === 'admin' ? 'Abraham13' : (activeRole === 'creator' ? 'creator@jfa.com' : 'budi@student.jfa.ac.id');
+            let passValue = activeRole === 'admin' ? 'abrahamabraham' : 'password123';
+
+            if (authMode === 'login') {
+                formBox.innerHTML = `
+                    <div class="form-group"><label>${identityLabel}</label><input type="text" id="auth-identity" value="${hintValue}"></div>
+                    <div class="form-group"><label>Password *</label><input type="password" id="auth-password" value="${passValue}"></div>
+                    <button class="btn-action" onclick="executeAuth()">Sign In</button>
+                `;
+            } else {
+                formBox.innerHTML = `
+                    <div class="form-group"><label>Nama Lengkap *</label><input type="text" id="auth-name" placeholder="Nama Anda"></div>
+                    <div class="form-group"><label>${identityLabel}</label><input type="text" id="auth-identity" placeholder="NIM atau Email"></div>
+                    <div class="form-group"><label>Password *</label><input type="password" id="auth-password" placeholder="Password Baru"></div>
+                    <button class="btn-action" onclick="executeAuth()">Daftar dan Kirim Email Aktivasi</button>
+                `;
+            }
+        }
+
+        function executeAuth() {
+            const identity = document.getElementById('auth-identity').value.trim();
+            const password = document.getElementById('auth-password').value;
+            if(!identity || !password) return alert("Semua kolom harus diisi!");
+
+            let name = identity.split('@')[0];
+
+            if(authMode === 'register') {
+                name = document.getElementById('auth-name').value || name;
+                spreadsheetDB.push({ id: spreadsheetDB.length + 1, name: name, identity: identity, password: password, role: activeRole, type: "Native" });
+                logEmailNotification(name, identity, "Registrasi Sukses");
+                renderSpreadsheet();
+                alert(`Registrasi Berhasil!`);
+                authMode = 'login';
+                renderAuthForm();
+                return;
+            }
+
+            const accountFound = spreadsheetDB.find(u => u.identity.toLowerCase() === identity.toLowerCase() && u.password === password);
+            if (accountFound) {
+                loggedInUser = accountFound;
+                activeRole = loggedInUser.role;
+            } else {
+                return alert("Kombinasi Username/ID dan Password salah!");
+            }
+
+            document.getElementById('header-user-greet').innerText = `HI, ${loggedInUser.name.toUpperCase()}`;
+            document.getElementById('header-user-greet').style.display = 'inline-block';
+            document.getElementById('nav-logout').style.display = 'inline-block';
+
+            if(loggedInUser.role === 'admin') {
+                document.getElementById('nav-cms').innerText = 'Admin Panel';
+                switchSection('admin-dashboard');
+                renderAdminTables();
+            } else if(loggedInUser.role === 'creator') {
+                document.getElementById('nav-cms').innerText = 'Creator Studio';
+                switchSection('cms-dashboard');
+                renderCreatorTable();
+            } else {
+                document.getElementById('nav-cms').innerText = 'My Catalog';
+                switchSection('home');
+            }
+        }
+
+        function oauthLogin(provider) {
+            let emailMock = `user.${provider.toLowerCase()}@jfa.com`;
+            let nameMock = `${provider} User`;
+            if (!spreadsheetDB.find(u => u.identity === emailMock)) {
+                spreadsheetDB.push({ id: spreadsheetDB.length + 1, name: nameMock, identity: emailMock, password: "oauth-bypass", role: "user", type: provider });
+            }
+            loggedInUser = { name: nameMock, identity: emailMock, role: "user" };
+            document.getElementById('header-user-greet').innerText = `HI, ${nameMock.toUpperCase()}`;
+            document.getElementById('header-user-greet').style.display = 'inline-block';
+            document.getElementById('nav-logout').style.display = 'inline-block';
+            document.getElementById('nav-cms').innerText = 'My Catalog';
+            renderSpreadsheet();
+            switchSection('home');
+        }
+
+        function logout() {
+            loggedInUser = null;
+            document.getElementById('header-user-greet').style.display = 'none';
+            document.getElementById('nav-logout').style.display = 'none';
+            document.getElementById('nav-cms').innerText = 'Sign In';
+            switchSection('home');
+        }
+
+        function renderSpreadsheet() {
+            const table = document.getElementById('spreadsheet-table');
+            table.innerHTML = `<tr><th>Nama</th><th>Email / ID</th><th>Role</th><th>Auth Type</th></tr>`;
+            spreadsheetDB.forEach(user => {
+                table.innerHTML += `<tr><td style="font-weight:600;">${user.name}</td><td>${user.identity}</td><td>${user.role}</td><td>${user.type}</td></tr>`;
+            });
+        }
+
+        function logEmailNotification(name, email, subject) {
+            const logBox = document.getElementById('email-log');
+            const timestamp = new Date().toLocaleTimeString();
+            logBox.innerHTML = `[${timestamp}] 📨 EMAIL SENT to &lt;${email}&gt; 
+Subject: ${subject}
+
+` + logBox.innerHTML;
+        }
+
+        function renderMovies() {
+            const trendingContainer = document.getElementById('movie-trending');
+            const highlightsContainer = document.getElementById('movie-highlights');
+            const classicsContainer = document.getElementById('movie-classics');
+            const showcaseContainer = document.getElementById('movie-showcase-grid');
+            const liveContainer = document.getElementById('movie-live-grid');
+            const mabaContainer = document.getElementById('movie-maba-grid');
+
+            trendingContainer.innerHTML = ''; highlightsContainer.innerHTML = ''; classicsContainer.innerHTML = '';
+            showcaseContainer.innerHTML = ''; liveContainer.innerHTML = ''; mabaContainer.innerHTML = '';
+
+            movies.filter(m => m.status === 'approved').forEach(movie => {
+                let badgeHTML = movie.comingSoon ? `<div class="badge-coming-soon">Coming Soon on 2026</div>` : '';
+                let cardHTML = `
+                    <div class="movie-card" onclick="openModal(${movie.id})">
+                        ${badgeHTML}
+                        <div class="poster-wrapper"><img src="${movie.poster}" alt="Poster"></div>
+                        <div class="movie-info">
+                            <h3>${movie.title}</h3>
+                            <div class="movie-meta-brief"><span>${movie.category}</span><span>${movie.duration}</span></div>
+                        </div>
+                    </div>`;
+                if(movie.homeSection === 'trending') trendingContainer.innerHTML += cardHTML;
+                else if(movie.homeSection === 'highlights') highlightsContainer.innerHTML += cardHTML;
+                else if(movie.homeSection === 'classics') classicsContainer.innerHTML += cardHTML;
+                else if(movie.homeSection === 'showcase') showcaseContainer.innerHTML += cardHTML;
+                else if(movie.homeSection === 'live') liveContainer.innerHTML += cardHTML;
+                else if(movie.homeSection === 'maba') mabaContainer.innerHTML += cardHTML;
+            });
+
+            document.getElementById('row-trending-box').style.display = trendingContainer.innerHTML ? 'block' : 'none';
+            document.getElementById('row-highlights-box').style.display = highlightsContainer.innerHTML ? 'block' : 'none';
+            document.getElementById('row-classics-box').style.display = classicsContainer.innerHTML ? 'block' : 'none';
+        }
+
+        /* --- MODAL DETAIL & PEMUTAR VIDEO --- */
+        function openModal(id) {
+            const movie = movies.find(m => m.id === id);
+            if(movie) {
+                const watchBtn = document.getElementById('modalWatchBtn');
+                watchBtn.classList.remove('clicked-hide'); 
+
+                document.getElementById('modalTitle').innerText = movie.title;
+                document.getElementById('modalCategory').innerText = movie.category;
+                document.getElementById('modalGenre').innerText = movie.genre;
+                document.getElementById('modalYear').innerText = movie.year;
+                document.getElementById('modalDuration').innerText = movie.duration;
+                document.getElementById('modalSynopsis').innerText = movie.synopsis;
+                document.getElementById('modalDirector').innerText = movie.director;
+                document.getElementById('modalProducer').innerText = movie.producer || '-';
+                
+                const mediaContainer = document.getElementById('mediaContainer');
+                mediaContainer.innerHTML = `
+                    <div id="cinemaFlash" class="cinema-flash"></div>
+                    <img id="modalPoster" class="poster-placeholder-modal" src="${movie.poster}" alt="Poster">
+                `;
+                
+                currentActiveMovieVideoUrl = movie.trailer;
+
+                // Logika memutar video saat tombol WATCH NOW diklik
+                watchBtn.onclick = function() {
+                    watchBtn.classList.add('clicked-hide');
+                    const flash = document.getElementById('cinemaFlash');
+                    const poster = document.getElementById('modalPoster');
+                    flash.classList.add('trigger');
+                    
+                    setTimeout(() => {
+                        if(poster) poster.style.opacity = '0';
+                        
+                        // Menangani tautan eksternal iframe (seperti YouTube) atau pemutar video HTML5 biasa
+                        if (currentActiveMovieVideoUrl.includes('youtube.com') || currentActiveMovieVideoUrl.includes('youtube-nocookie.com')) {
+                            const iframeTag = document.createElement('iframe');
+                            iframeTag.src = currentActiveMovieVideoUrl + "&autoplay=1";
+                            iframeTag.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                            iframeTag.setAttribute('allowfullscreen', 'true');
+                            iframeTag.style.cssText = "width:100%; height:100%; border:none; position:absolute; top:0; left:0; z-index:5;";
+                            mediaContainer.appendChild(iframeTag);
+                        } else {
+                            const videoTag = document.createElement('video');
+                            videoTag.src = currentActiveMovieVideoUrl;
+                            videoTag.controls = true;
+                            videoTag.autoplay = true;
+                            videoTag.style.cssText = "width:100%; height:100%; object-fit:contain; position:absolute; top:0; left:0; z-index:5;";
+                            mediaContainer.appendChild(videoTag);
+                            
+                            if (videoTag.requestFullscreen) {
+                                videoTag.requestFullscreen();
+                            } else if (videoTag.webkitRequestFullscreen) {
+                                videoTag.webkitRequestFullscreen();
+                            }
+                        }
+
+                        setTimeout(() => { flash.classList.remove('trigger'); }, 50);
+                    }, 300);
+                };
+
+                const modal = document.getElementById('movieModal');
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('open'), 10);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('movieModal');
+            modal.classList.remove('open');
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(e => console.log(e));
+            }
+            setTimeout(() => { modal.style.display = 'none'; document.getElementById('mediaContainer').innerHTML = '<div id="cinemaFlash" class="cinema-flash"></div>'; }, 300);
+        }
+
+        /* --- PROSES SUBMISSION DENGAN LOCAL FILE BLOB OBJECT --- */
+        function submitNewFilm() {
+            const title = document.getElementById('new-title').value;
+            const director = document.getElementById('new-director').value;
+            const producer = document.getElementById('new-producer').value;
+            const duration = document.getElementById('new-duration').value;
+            const year = document.getElementById('new-year').value;
+            const category = document.getElementById('new-category').value;
+            const genre = document.getElementById('new-genre').value;
+            const synopsis = document.getElementById('new-synopsis').value;
+            
+            const posterInput = document.getElementById('new-poster');
+            const fileInput = document.getElementById('new-video-file');
+            
+            let posterUrl = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600';
+            if(posterInput.files.length > 0) {
+                posterUrl = URL.createObjectURL(posterInput.files[0]);
+            }
+            
+            let videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+            if(fileInput.files.length > 0) {
+                videoUrl = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            movies.push({
+                id: Date.now(), title, director, producer, duration, year, category, genre, poster: posterUrl, trailer: videoUrl, synopsis,
+                status: 'pending', homeSection: 'trending', owner: loggedInUser ? loggedInUser.identity : 'anonymous', comingSoon: false
+            });
+
+            renderCreatorTable();
+            alert("File Poster & Video MP4/MOV Anda berhasil diajukan ke antrean kurasi Admin!");
+            document.getElementById('creator-upload-form').reset();
+        }
+
+        function renderCreatorTable() {
+            const table = document.getElementById('creator-table');
+            table.innerHTML = `<tr><th>Judul Karya</th><th>Kategori</th><th>Status Validasi</th></tr>`;
+            movies.filter(m => m.owner === (loggedInUser ? loggedInUser.identity : '')).forEach(m => {
+                table.innerHTML += `<tr><td style="font-weight:600;">${m.title}</td><td>${m.category}</td><td><span class="status-badge status-${m.status}">${m.status}</span></td></tr>`;
+            });
+        }
+
+        /* --- ADMIN SUBMISSION --- */
+        function adminAddFilmDirectly() {
+            const title = document.getElementById('adm-title').value;
+            const director = document.getElementById('adm-director').value;
+            const producer = document.getElementById('adm-producer').value;
+            const duration = document.getElementById('adm-duration').value;
+            const year = document.getElementById('adm-year').value;
+            const category = document.getElementById('adm-category').value;
+            const genre = document.getElementById('adm-genre').value;
+            const selectedSection = document.getElementById('adm-homesection').value;
+            const synopsis = document.getElementById('adm-synopsis').value;
+            
+            const posterInput = document.getElementById('adm-poster');
+            const fileInput = document.getElementById('adm-video-file');
+
+            let posterUrl = 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600';
+            if(posterInput.files.length > 0) {
+                posterUrl = URL.createObjectURL(posterInput.files[0]);
+            }
+
+            let videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+            if(fileInput.files.length > 0) {
+                videoUrl = URL.createObjectURL(fileInput.files[0]);
+            }
+
+            movies.push({
+                id: Date.now(), title, director, producer, duration, year, category, genre, poster: posterUrl, trailer: videoUrl, synopsis,
+                status: 'approved', homeSection: selectedSection, owner: 'admin-master', comingSoon: false
+            });
+
+            alert(`Sukses mempublikasikan film baru langsung ke section ${selectedSection.toUpperCase()}!`);
+            document.getElementById('admin-upload-form').reset();
+            renderAdminTables();
+            renderMovies();
+        }
+
+        function renderAdminTables() { renderCurateTable(); renderDeleteTable(); renderRecycleTable(); }
+
+        function renderCurateTable() {
+            const table = document.getElementById('admin-table');
+            table.innerHTML = `<tr><th>Judul Film</th><th>Kategori</th><th>Status</th><th>Penempatan Halaman</th><th>Aksi Validasi</th></tr>`;
+            movies.forEach(m => {
+                table.innerHTML += `
+                    <tr>
+                        <td><span class="clickable-title" onclick="openModal(${m.id})">${m.title}</span></td>
+                        <td>${m.category}</td>
+                        <td><span class="status-badge status-${m.status}">${m.status}</span></td>
+                        <td>
+                            <select class="select-curate" onchange="updateHomeSection(${m.id}, this.value)">
+                                <option value="trending" ${m.homeSection === 'trending' ? 'selected' : ''}>Trending Now</option>
+                                <option value="highlights" ${m.homeSection === 'highlights' ? 'selected' : ''}>Student Highlights</option>
+                                <option value="classics" ${m.homeSection === 'classics' ? 'selected' : ''}>Classics & Doc</option>
+                                <option value="showcase" ${m.homeSection === 'showcase' ? 'selected' : ''}>JFA SHOWCASE</option>
+                                <option value="maba" ${m.homeSection === 'maba' ? 'selected' : ''}>Pekan Maba</option>
+                                <option value="live" ${m.homeSection === 'live' ? 'selected' : ''}>LIVE STREAM</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button class="btn-curate" style="background:var(--success); color:#fff;" onclick="curateFilm(${m.id}, 'approved')">Approve</button>
+                            <button class="btn-curate" style="background:var(--warning); color:#222;" onclick="curateFilm(${m.id}, 'pending')">Hold</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function updateHomeSection(id, selectedSection) {
+            const idx = movies.findIndex(m => m.id === id);
+            if(idx !== -1) { movies[idx].homeSection = selectedSection; renderMovies(); alert(`Konten dipindahkan.`); }
+        }
+
+        function curateFilm(id, decision) {
+            const idx = movies.findIndex(m => m.id === id);
+            if(idx !== -1) { movies[idx].status = decision; renderAdminTables(); renderMovies(); }
+        }
+
+        function renderDeleteTable() {
+            const deleteTable = document.getElementById('admin-delete-table');
+            deleteTable.innerHTML = `<tr><th>Judul Film Terdaftar</th><th>Sutradara</th><th>Owner Akun</th><th>Tindakan Sistem</th></tr>`;
+            movies.forEach(m => {
+                deleteTable.innerHTML += `
+                    <tr>
+                        <td style="font-weight:600;">${m.title}</td>
+                        <td>${m.director}</td>
+                        <td style="font-family:monospace;">${m.owner}</td>
+                        <td><button class="btn-curate" style="background:var(--accent); color:#fff;" onclick="deleteFilm(${m.id})">DELETE KARYA</button></td>
+                    </tr>`;
+            });
+        }
+
+        function renderRecycleTable() {
+            const recycleTable = document.getElementById('admin-recycle-table');
+            recycleTable.innerHTML = `<tr><th>Judul Film Terhapus</th><th>Sutradara</th><th>Bekas Section</th><th>Opsi Pemulihan</th></tr>`;
+            if(deletedMovies.length === 0) {
+                recycleTable.innerHTML += `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Tidak ada film di dalam Tempat Sampah.</td></tr>`;
+                return;
+            }
+            deletedMovies.forEach(m => {
+                recycleTable.innerHTML += `<tr><td>${m.title}</td><td>${m.director}</td><td>${m.homeSection}</td><td><button class="btn-curate" style="background:var(--success); color:#fff;" onclick="restoreFilm(${m.id})">♻️ RESTORE</button></td></tr>`;
+            });
+        }
+
+        function deleteFilm(id) {
+            const targetMovie = movies.find(m => m.id === id);
+            if (confirm(`Hapus film "${targetMovie.title}"?`)) {
+                deletedMovies.push(targetMovie);
+                movies = movies.filter(m => m.id !== id);
+                renderAdminTables(); renderMovies();
+            }
+        }
+
+        function restoreFilm(id) {
+            const restoredMovie = deletedMovies.find(m => m.id === id);
+            if (restoredMovie) {
+                movies.push(restoredMovie);
+                deletedMovies = deletedMovies.filter(m => m.id !== id);
+                renderAdminTables(); renderMovies();
+            }
+        }
+    </script>
+</body>
+</html>
