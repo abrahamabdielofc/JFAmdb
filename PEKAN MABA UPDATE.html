@@ -219,7 +219,7 @@
             </div>
         </div>
 
-        <!-- SECTION: JFA SHOWCASE (SEPARATE TAB) -->
+        <!-- SECTION: JFA SHOWCASE -->
         <div id="jfa-showcase" class="section">
             <div class="coming-soon-box">
                 <h2>JFA Showcase</h2>
@@ -228,7 +228,7 @@
             <div class="movie-grid" id="movie-showcase-grid"></div>
         </div>
 
-        <!-- SECTION: LIVE PAGE (SEPARATE TAB) -->
+        <!-- SECTION: LIVE PAGE -->
         <div id="live-page" class="section">
             <div class="coming-soon-box">
                 <h2>Live Streaming Hub</h2>
@@ -237,7 +237,7 @@
             <div class="movie-grid" id="movie-live-grid"></div>
         </div>
 
-        <!-- SECTION: PEKAN MABA (SEPARATE TAB) -->
+        <!-- SECTION: PEKAN MABA -->
         <div id="maba-page" class="section">
             <div class="coming-soon-box">
                 <h2>Pekan Maba JFA</h2>
@@ -422,7 +422,7 @@
         ];
 
         let movies = [
-            { 
+            {
                 id: 1, 
                 title: "Jalan Persemaian", 
                 director: "Abraham Abdiel Arya Putra Yudianto", 
@@ -438,7 +438,7 @@
                 status: "approved", 
                 homeSection: "trending", 
                 owner: "JFAmdb, INIAJA FILMS",
-                comingSoon: false, 
+                comingSoon: true, 
                 rating: "SU"
             },
             {
@@ -446,11 +446,11 @@
                 title: "Lili dan Suara-Suara diantara sunyi",
                 director: "Muhammad iqbal",
                 producer: "Zhei Indira WIka",
-                duration: "11 Min 09 Sec",
+                duration: "10 Min 25 Sec",
                 year: "2026",
-                category: "Pekan maba",
+                category: "Pekan Maba 2026",
                 genre: "Drama",
-                synopsis: "Film eksploratif yang disubmit khusus untuk menyambut Pekan Mahasiswa Baru Jogja Film Academy.",
+                synopsis: "Lili Yang selalu mendapatkan tekanan dari Mertuanya , ketika anak-nya telah tiada semuanya seakan menjadi kesalahan terbesar lili yang dianggapnya Ia telah membunuh anaknya",
                 poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/uan1RBOcoQGl0fpYpL1J8wqzMkJ.jpg",
                 trailer: "https://drive.google.com/file/d/15aZRp4clH-sk5YNvz0W-p8Gq51U1Z9ag/preview",
                 status: "approved",
@@ -476,7 +476,7 @@
                 comingSoon: false
             },
             {
-            id: 4,
+                id: 4,
                 title: "Tahta",
                 director: "Della Nanda Puspitararas",
                 producer: "Della Nanda Puspitararas, Bagas Cerie Wahyu Darome",
@@ -485,17 +485,202 @@
                 category: "Karya Mahasiswa",
                 genre: "Drama",
                 synopsis: "seorang detektif terkenal bernama faisal ahmad yang berumur 50 tahun dan tak disangka anaknya adalah pembunuh temannya sendiri.",
-                poster: "https://a.ltrbxd.com/resized/film-poster/1/4/9/1/4/0/9/1491409-look-it-side-0-1000-0-1500-crop.jpg?v=c1090a3db9",
-                trailer: "https://youtu.be/XgaRfCXOA5Y",
+                poster: "blank",
+                trailer: "https://drive.google.com/file/d/1hJJ8VRFUP4Sovucx34-SprBp9SY13npG/preview",
                 status: "approved",
                 homeSection: "trending",
                 owner: "JFAmdb",
                 comingSoon: false
             },
-            
-    
+            {
+                id: 5,
+                title: "Fragment",
+                director: "Jofan Afsya Kaunan",
+                producer: "Bilamayta La Devtos",
+                duration: "6 Min 27 Sec",
+                year: "2026",
+                category: "Pekan Maba 2026",
+                genre: "Drama",
+                synopsis: "Tekanan dan didikan orang-tuanya yang kerap dialami Ramą selama ia kecil, membuat ia sempatik memutuskan bunun diri, supaya ia terlepas dari tekanan yang orang tuanya berikan , yang bertujuan ingin rama menjadi seorang frater.",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/dDFy2XJRq2o7VD2VTZJ62mApSTJ.jpg",
+                trailer: "https://drive.google.com/file/d/13KVcx4ADaXceKKxGubH5KY00PCPytmpr/preview",
+                status: "approved",
+                homeSection: "maba",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 6,
+                title: "The MIND",
+                director: "Abraham Abdiel Arya Putra Yudianto",
+                producer: "Abraham Abdiel Arya Putra Yudianto",
+                duration: "3 Min 19 Sec",
+                year: "2026",
+                category: "Karya Mahasiswa",
+                genre: "Drama",
+                synopsis: "Shine seorang remaja berusia 20 tahun sering mengalami kekerasan dalam keluarganya yang mengakibatkan dirinya tidak bisa keluar dari bayang-bayang masa lalu itu.",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/KMvWl8SdCS69pcJAWrCcHVzBvh.jpg",
+                trailer: "https://drive.google.com/file/d/1FD5PP78JI28FMnXWq9EzHGBQHWc1QWiD/preview",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 7,
+                title: "ROH",
+                director: "Ryan Ardyansyah",
+                producer: "Fadhil Senopary",
+                duration: "9 Min 03 Sec",
+                year: "2026",
+                category: "Karya Tugas Akhir",
+                genre: "Drama,Horror",
+                synopsis: "Setelah pemakaman ayahnya, seorang wanita muda ingin kembali ke rumahnya. Namun, desakan ibunya membuatnya tetap berada di rumah tempat ia dilahirkan, membuka jalan bagi pertemuan yang tak terduga.",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/riBDc8AAPVKbhj0JEoiIRrhnUK6.jpg",
+                trailer: "https://www.youtube.com/embed/ZVOjAC2w1lw",
+                status: "approved",
+                homeSection: "showcase",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 8,
+                title: "Langkah Kecil si Joni",
+                director: "Bagas Handoyo",
+                producer: "Agis Sri Adistira, Jemmy Akbar",
+                duration: "6 Min 03 Sec",
+                year: "2026",
+                category: "Pekan Maba 2026",
+                genre: "Drama",
+                synopsis: "Joni terlalu minder dengan tubuhnya yang tampak gemuk dan ia berusaha sekeras-kerasnya untuk bisa menjadi Seperti ana-anak pada umumnya dan memikat hati perempuan yang menjadi tujuan utamanya.",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/o1224Ann0AgMK4P1Vv5ojLjwJtl.jpg",
+                trailer: "https://drive.google.com/file/d/153E-82c-oxBZkpTfsneSYPwX-MIq6Bna/preview",
+                status: "approved",
+                homeSection: "maba",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 9,
+                title: "Poem & Blood",
+                director: "Nengah Teguh dwi Ardika",
+                producer: "Raihan Akbar Bagaskara",
+                duration: "9 Min 19 Sec",
+                year: "2026",
+                category: "Pekan Maba 2026",
+                genre: "Drama",
+                synopsis: "Vera tengah kesepian dirumahnya dan ia mengajak kedua temannya deby dan reno dengan maksud mengajak mereka untuk minum dan makan bersama, namun hal tak terugga terjadi kepada mereka berdua.",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/3OrzhXwQMVLkelbysNW1u04Phht.jpg",
+                trailer: "#",
+                status: "approved",
+                homeSection: "maba",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 10,
+                title: "First Step",
+                director: "Jason Herlangga Prasongko",
+                producer: "Mario Natanael Damanik",
+                duration: "10 Min 01 Sec",
+                year: "2026",
+                category: "Pekan Maba 2026",
+                genre: "Drama",
+                synopsis: "kisah seorang anak remaja bernama Nada, suatu hari mendapatkan pesan dari kampus impiannya bahwa ia diterima, dan sang ayah tak sanggup melepas anak semata wayangnya untuk berkuliah di luar kota",
+                poster: "https://www.themoviedb.org/t/p/w600_and_h900_face/h9NzFQbAEj6SlEQnQk0Kih71XXj.jpg",
+                trailer: "https://drive.google.com/file/d/1veMY_8EDhSdI2yFLQXI5v2NRO1eTNYJ_/preview",
+                status: "approved",
+                homeSection: "maba",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 11,
+                title: "Curhatan Revi Siterusah",
+                director: "Anggra Prastika Rosche",
+                producer: "Anggra Prastika Rosche",
+                duration: "19 Min 36 Sec",
+                year: "2025",
+                category: "Karya Mahasiswa",
+                genre: "Drama",
+                synopsis: "In a country where job requirements are often unreasonable, a college student, pressured by the need to make ends meet, accepts a job as a video editor only to face vague requests and absurd demands.",
+                poster: "https://a.ltrbxd.com/resized/film-poster/1/3/5/7/6/2/5/1357625-revi-siterusahs-heart-voice-0-1000-0-1500-crop.jpg?v=ef5d036b61",
+                trailer: "https://drive.google.com/file/d/1kZXb88DN6FAA7tfpgl3L_Sdj7KvoZxSb/preview",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 12,
+                title: "Ting-Ting: Dance with Breathes Hope",
+                director: "Faishol Rikza,  Arga Cahya Wijaya",
+                producer: "One Putra",
+                duration: "13 Min",
+                year: "2026",
+                category: "Karya Mahasiswa",
+                genre: "Drama",
+                synopsis: "A junior high school girl becomes obsessed with owning an iPhone like her peers. She keeps whining and begging her father for one..",
+                poster: "https://a.ltrbxd.com/resized/film-poster/1/3/9/5/4/8/9/1395489-ting-ting-dance-with-breathes-hope-0-1000-0-1500-crop.jpg?v=545d4ef163",
+                trailer: "https://drive.google.com/file/d/1mKfMXXxV82gWla9vmq8jiMohdkfc19yr/preview",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb, BlackHorse Media",
+                comingSoon: false
+            },
+            {
+                id: 13,
+                title: "Love Is A dog from Hell",
+                director: "Rarai Masae Soca Wening Ati",
+                producer: "Fadhil Senopary",
+                duration: "19 Min",  
+                year: "2024",
+                category: "Karya Tugas Akhir",
+                genre: "Drama",
+                synopsis: "Ada seorang wanita muda bernama Asha yang menyukai puisi dan menjalin hubungan asmara dengan seorang aktor teater. Hari demi hari, dia semakin yakinbahwa cinta itu ada dan abadi. Melalui cinta, Asha tumbuh dan akhirnva a menemukan dirinva sendiri dan tujuan hidupnya. Namun, suatu hari, Asha mengalami kecelakaan yang mengubah segalanya. Dia harus menghadapi kenyataan pahit bahwa hidupnya tidak akan pernah sama lagi.",
+                poster: "https://blogger.googleusercontent.com/img/a/AVvXsEj3g6mgcPDmYHRefPybNdU-EGzzQ-_PUuT2Uq6riYNwL47THREPGs7DDfVbRWm8kz0Olzc_TYKBb3RrP8Z7CdMAO1b84R3fQc0YNQ8gtE-nEs0ciqxi6kaoVaO8h-BV3_b1cGz-1SP3wqINdBl2Cw2ee2gc2ArlKbL7vGnS4I2P5TecIvXYyNuS4scib-VQ", 
+                trailer: "https://drive.google.com/file/d/1j0vU_yv3V6tibM66AQVGNwpXtDnFxzNQ/preview",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 14,
+                title: "Atma Tantra Rasa",
+                director: "Abraham Abdiel Arya Putra Yudianto",
+                producer: "Abraham Abdiel Arya Putra Yudianto",
+                duration: "12 Min",  
+                year: "2025",
+                category: "Karya Mahasiswa",
+                genre: "Dokumenter",
+                synopsis: "Performing artists are considered to be performing or offering works that are considered occult and mystical, so an erotic attitude grows which makes some people consider art.",
+                poster: "https://a.ltrbxd.com/resized/film-poster/1/4/7/5/4/5/1/1475451-atma-tantra-rasa-0-1000-0-1500-crop.jpg?v=86366f77d9", 
+                trailer: "https://youtube.com/embed/5N8CyEYHZAU",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            },
+            {
+                id: 15,
+                title: "Kholik",
+                director: "Mandela Majid Prachira",
+                producer: "Yusmita Khairul Latif",
+                duration: "16 Min 55 Sec",  
+                year: "2025",
+                category: "Karya dosen",
+                genre: "Drama", 
+                synopsis: "A young elementary school student saw a strange light at night and believed it was a UFO. However, neither the family nor the community supported this belief and instead thought that what was seen was a Pulung Gantung phenomenon, which was believed to bring disaster.",
+                poster: "https://filmfreeway-production-storage-01-connector.filmfreeway.com/press_kits/posters/003/029/132/original/cac1cf07df-poster.jpg?1741730769", 
+                trailer: "https://drive.google.com/file/d/1ukQ5xZNnnPewPnG0X7ywl1-ueLElRcvS/preview",
+                status: "approved",
+                homeSection: "trending",
+                owner: "JFAmdb",
+                comingSoon: false
+            }                                                         
         ];
-
         let deletedMovies = [];
         let activeRole = 'user'; 
         let authMode = 'login';  
@@ -687,7 +872,7 @@
 
         function renderMovies() {
             const trendingContainer = document.getElementById('movie-trending');
-            const mabaHomeContainer = document.getElementById('movie-maba-home'); // Target container baru di home
+            const mabaHomeContainer = document.getElementById('movie-maba-home'); 
             const highlightsContainer = document.getElementById('movie-highlights');
             const classicsContainer = document.getElementById('movie-classics');
             
@@ -710,11 +895,10 @@
                         </div>
                     </div>`;
                 
-                // Distribusi section
                 if(movie.homeSection === 'trending') trendingContainer.innerHTML += cardHTML;
                 else if(movie.homeSection === 'maba') {
-                    mabaHomeContainer.innerHTML += cardHTML; // Tampilkan di Home
-                    mabaContainer.innerHTML += cardHTML;     // Tampilkan juga di Tab khusus Pekan Maba
+                    mabaHomeContainer.innerHTML += cardHTML; 
+                    mabaContainer.innerHTML += cardHTML;     
                 }
                 else if(movie.homeSection === 'highlights') highlightsContainer.innerHTML += cardHTML;
                 else if(movie.homeSection === 'classics') classicsContainer.innerHTML += cardHTML;
@@ -760,14 +944,19 @@
                     setTimeout(() => {
                         if(poster) poster.style.opacity = '0';
                         
-                        if (currentActiveMovieVideoUrl.includes('youtube.com') || currentActiveMovieVideoUrl.includes('youtube-nocookie.com')) {
+                        if (currentActiveMovieVideoUrl.includes('youtube.com') || currentActiveMovieVideoUrl.includes('youtube-nocookie.com') || currentActiveMovieVideoUrl.includes('drive.google.com')) {
                             const iframeTag = document.createElement('iframe');
-                            iframeTag.src = currentActiveMovieVideoUrl + "&autoplay=1";
-                            iframeTag.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+                            let targetUrl = currentActiveMovieVideoUrl;
+                            if (targetUrl.includes('drive.google.com') && !targetUrl.includes('autoplay=1')) {
+                                targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+                            }
+                            iframeTag.src = targetUrl;
+                            iframeTag.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen');
                             iframeTag.setAttribute('allowfullscreen', 'true');
                             iframeTag.style.cssText = "width:100%; height:100%; border:none; position:absolute; top:0; left:0; z-index:5;";
                             mediaContainer.appendChild(iframeTag);
                         } else {
+                            // METODE FULLSCREEN OTOMATIS BERJALAN PADA BERKAS MP4 / MOV
                             const videoTag = document.createElement('video');
                             videoTag.src = currentActiveMovieVideoUrl;
                             videoTag.controls = true;
@@ -775,10 +964,13 @@
                             videoTag.style.cssText = "width:100%; height:100%; object-fit:contain; position:absolute; top:0; left:0; z-index:5;";
                             mediaContainer.appendChild(videoTag);
                             
+                            // Trigger fullscreen browser API otomatis
                             if (videoTag.requestFullscreen) {
                                 videoTag.requestFullscreen();
                             } else if (videoTag.webkitRequestFullscreen) {
                                 videoTag.webkitRequestFullscreen();
+                            } else if (videoTag.msRequestFullscreen) {
+                                videoTag.msRequestFullscreen();
                             }
                         }
 
@@ -795,8 +987,12 @@
         function closeModal() {
             const modal = document.getElementById('movieModal');
             modal.classList.remove('open');
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(e => console.log(e));
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(e => console.log(e));
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen().catch(e => console.log(e));
+                }
             }
             setTimeout(() => { 
                 modal.style.display = 'none'; 
